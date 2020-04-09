@@ -190,6 +190,14 @@ public class Minesweeper extends Application
 		tile.setStyle(TILE_STYLE_REVEALED);
 		tile.setAlignment(Pos.CENTER);
 		tile.setFont(new Font("Arial", FONT_SIZE_STATUS_TILE));
+		tile.setOnMouseClicked( e-> 
+		{
+			if (e.getButton() == MouseButton.MIDDLE) {
+					aMinefield.revealAllNeighbours(pPosition);
+			}
+			refresh();
+		});
+
 		if( aMinefield.isMined(pPosition) )
 		{
 			tile.setText("X");
