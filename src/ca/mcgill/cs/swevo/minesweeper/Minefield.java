@@ -76,8 +76,7 @@ public class Minefield
 				totalMines++;
 				if( !cell.isHidden())
 				{
-					status = MinefieldStatus.EXPLODED;
-					break;
+					return MinefieldStatus.EXPLODED;
 				}
 				else
 				{
@@ -88,11 +87,7 @@ public class Minefield
 				}
 			}
 		}
-		if( status == MinefieldStatus.EXPLODED )
-		{
-			return status;
-		}
-		else if( totalMines == markedMines )
+		if( totalMines == markedMines )
 		{
 			return MinefieldStatus.CLEARED;
 		}
@@ -181,6 +176,34 @@ public class Minefield
 	}
 	
 	/**
+	 * Reveal the neighbour cells at pPosition if all mines are marked.
+	 * 
+	 * @param pPosition The position of the cell whose neighbours are to reveal.
+	 * @pre pPosition != null;
+	 */
+	public void revealAllNeighbours(Position pPosition)
+	{
+		assert pPosition != null;
+		int numberOfMarkedCells = 0;
+		int numberOfMinedCells = 0;
+		for (Position neighbour : getNeighbours(pPosition)) {
+			if (getCell(neighbour).isMarked()) {
+				numberOfMarkedCells += 1;
+			}
+			if (getCell(neighbour).isMined()) {
+				numberOfMinedCells += 1;
+			}
+		}
+		if (numberOfMarkedCells == numberOfMinedCells) {
+			for (Position neighbour : getNeighbours(pPosition)) {
+				if (getCell(neighbour).isHidden() && !getCell(neighbour).isMarked()) {
+					reveal(neighbour);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Toggle the mark at cell pPosition.
 	 * 
 	 * @param pPosition The position of the cell to mark/unmark.
@@ -203,7 +226,7 @@ public class Minefield
 	public int getNumberOfMinedNeighbours(Position pPosition)
 	{
 		assert pPosition != null;
-		return internalGetNumberOfMinedNeighbours(pPosition);
+		return getCell(pPosition).getNumberOfMinedNeighbours();
 	}
 		
 	private void initialize()
@@ -230,6 +253,9 @@ public class Minefield
 		for( int i = 0; i < pNumberOfMines; i++ )
 		{
 			getCell(positions.get(i)).mine();
+		}
+		for (Position position : aAllPositions) {
+			getCell(position).setNumberOfMinedNeighbours(internalGetNumberOfMinedNeighbours(position));
 		}
 	}
 	
