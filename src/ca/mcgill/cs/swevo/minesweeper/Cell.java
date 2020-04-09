@@ -54,6 +54,13 @@ public class Cell
 	}
 
 	private boolean aIsMined = false;
+	
+	/* number of mined neighbour cells
+	 * this field is added in order to optimize Minesweeper.refresh()
+	 * (to eliminate unneccessary redundant calculation of mined neighbours)
+	 */
+	private int numberOfMinedNeighbours = 0;
+	
 	private CellInteractionStatus aInteractionStatus = CellInteractionStatus.HIDDEN;
 	
 	/**
@@ -112,5 +119,15 @@ public class Cell
 	public void mine()
 	{
 		aIsMined = true;
+	}
+
+	int getNumberOfMinedNeighbours()
+	{
+		return numberOfMinedNeighbours;
+	}
+
+	void setNumberOfMinedNeighbours(int pNumberOfMinedNeighbours)
+	{
+		numberOfMinedNeighbours = pNumberOfMinedNeighbours;
 	}
 }
